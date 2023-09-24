@@ -1,0 +1,172 @@
+========
+Swagger
+========
+
+-> Swagger is a third party api
+
+-> Swagger is used to generate documentation for our REST APIs
+
+
+Q) What is REST API documentation ?
+
+Ans) REST API documentation will provide all the information about API like below
+
+			a) API Base URL
+			b) Endpoints of API
+			c) Request Data Format
+			d) Response Data Format
+
+
+-> API documentation will play major role in distributed applications development.
+
+
+Note: If we want to access any API then we need documentation for that. Based on the documentation we can understand api and its structure.
+
+===========
+Use-Case
+===========
+
+-> IRCTC project developed by one company to book train tickets
+
+-> MakeMyTrip applications developed by another company to book tickets.
+
+-> MakeMyTrip wants to communicate with IRCTC to book train tickets.
+
+-> To communicate with IRCTC, MakeMyTrip project developers should understand IRCTC API details.
+
+				a) What is URL ?
+				b) What are the Endpoints ?
+				c) Request Data Structure
+				d) Response Data Structure
+
+-> If MakeyMyTrip developers knows above details then only they can write the logic to access IRCTC api.
+
+Note: IRCTC team should provide API documentation to MakeMyTrip team.
+
+
+-> Swagger-UI is used to test our REST APIs (We can use this as alternative to POSTMAN)
+
+
+============================================
+How to setup Swagger in Spring Boot Application ?
+============================================
+
+###############  1) Add Swagger & Swagger-UI dependencies in pom.xml file ###############
+
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.9.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.9.2</version>
+		</dependency>
+
+
+
+#################  2) Create Swagger Config class ######################
+
+package in.ashokit.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+@Configuration
+@EnableSwagger2
+public class SwaggerConfig {
+	
+	@Bean
+	public Docket apiDoc() {
+		
+		return new Docket(DocumentationType.SWAGGER_2)
+				   .select()
+				   .apis(RequestHandlerSelectors.basePackage("in.ashokit.rest"))
+				   .paths(PathSelectors.any())
+				   .build();
+	}
+}
+
+
+################  3) Configure below property in application.properties file #################
+
+spring.mvc.pathmatch.matching-strategy = ANT_PATH_MATCHER
+
+
+###############  4) Run the spring boot application and access below URL ###################
+
+	URL : http://localhost:8080/swagger-ui.html
+
+=================================================================================
+Below Dependancey are from youtube vedios
+
+
+	<dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.4.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.4.0</version>
+        </dependency>
+
+==============================================================
+package In.Abdul.Spring.BootSwagger.SwaggerConfig;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import static springfox.documentation.builders.PathSelectors.regex;
+
+@Configuration
+@EnableSwagger2
+public class swaggerConfig {
+
+    @Bean
+    public Docket postsApi() {
+        return new Docket(DocumentationType.SWAGGER_2).groupName("Abdul Techie").apiInfo(apiInfo()).select()
+                .paths(regex("/book.*")).build();
+
+        // path should url and @RequestMapping url should be  same
+    }
+
+    private ApiInfo apiInfo() {
+        return new ApiInfoBuilder().title("Book Service")
+                .description("Sample Documentation Generated Using SWAGGER2 for our Book Rest API")
+                .termsOfServiceUrl("https://www.youtube.com/channel/UCORuRdpN2QTCKnsuEaeK-kQ")
+                .license("Java License From Abdul Techie")
+                .licenseUrl("https://www.youtube.com/channel/UCORuRdpN2QTCKnsuEaeK-kQ").version("1.0").build();
+    }
+}
+
+
+
+ant matcher is not needed for this swagger used from u-tube
+
+IMP NOTE
+===========
+
+spring version should be 2.5.6
+
+or else we will be facing an exception in programming
+
+
+
+
+
